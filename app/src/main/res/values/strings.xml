@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">CMT Cast Designer</string>
+    <string name="app_description">Medical leg measurement and 3D cast design for CMT patients using camera vision and ruler reference</string>
+    
+    <!-- Main Activity -->
+    <string name="start_measurement">Start Leg Measurement</string>
+    <string name="view_instructions">Instructions</string>
+    <string name="medical_disclaimer">Medical Disclaimer</string>
+    <string name="medical_warning">This is a prototype medical device. Always consult with qualified medical professionals before using any orthotic device.</string>
+    
+    <!-- Camera Activity -->
+    <string name="capture_photo">Capture Photo</string>
+    <string name="retake_photo">Retake</string>
+    <string name="next_step">Next</string>
+    <string name="back">Back</string>
+    
+    <!-- Measurement Activity -->
+    <string name="process_measurements">Process Measurements</string>
+    <string name="retake_measurements">Retake Photos</string>
+    <string name="proceed_to_cast_design">Design Cast</string>
+    <string name="measurement_analysis">Measurement Analysis</string>
+    
+    <!-- Instructions -->
+    <string name="instruction_step_1">Position a standard ruler (30cm/12in) vertically next to your leg</string>
+    <string name="instruction_step_2">Ensure the ruler is clearly visible and parallel to your leg</string>
+    <string name="instruction_step_3">Capture multiple angles: front, side, back, and detail views</string>
+    <string name="instruction_step_4">Keep lighting consistent and avoid shadows on the ruler</string>
+    
+    <!-- Medical Information -->
+    <string name="cmt_description">Charcot-Marie-Tooth (CMT) is a genetic disorder affecting peripheral nerves, often causing foot drop and ankle weakness.</string>
+    <string name="cast_purpose">This custom cast is designed to provide ankle support and assist with weight distribution for CMT patients.</string>
+    
+    <!-- Measurement Labels -->
+    <string name="leg_length">Leg Length</string>
+    <string name="ankle_circumference">Ankle Circumference</string>
+    <string name="calf_circumference">Calf Circumference</string>
+    <string name="cast_thickness">Cast Wall Thickness</string>
+    <string name="weight_bearing_area">Weight Bearing Area</string>
+    
+    <!-- Error Messages -->
+    <string name="error_camera_permission">Camera permission is required to take measurements</string>
+    <string name="error_no_ruler_detected">No ruler detected in image. Please ensure ruler is clearly visible</string>
+    <string name="error_measurement_failed">Measurement extraction failed. Please retake photos</string>
+    <string name="error_invalid_measurements">Measurements appear invalid. Please verify ruler placement</string>
+    
+    <!-- Success Messages -->
+    <string name="success_measurement_complete">Measurements extracted successfully</string>
+    <string name="success_cast_design_ready">Ready to generate 3D cast design</string>
+</resources>

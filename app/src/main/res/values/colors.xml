@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary colors -->
+    <color name="primary_blue">#2196F3</color>
+    <color name="primary_blue_dark">#1976D2</color>
+    <color name="primary_blue_light">#BBDEFB</color>
+    
+    <!-- Accent colors -->
+    <color name="accent_orange">#FF9800</color>
+    <color name="accent_orange_dark">#F57C00</color>
+    <color name="accent_orange_light">#FFE0B2</color>
+    
+    <!-- Background colors -->
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#000000</color>
+    <color name="overlay_background">#AA000000</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_light">#FFFFFF</color>
+    
+    <!-- Medical/Safety colors -->
+    <color name="medical_green">#4CAF50</color>
+    <color name="warning_red">#F44336</color>
+    <color name="caution_yellow">#FFC107</color>
+</resources>
