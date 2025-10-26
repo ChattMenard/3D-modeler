@@ -60,8 +60,14 @@ class MeasurementActivity : AppCompatActivity() {
                     |Triangles: ${result.triangleCount}
                     |Time: ${result.processingTimeMs / 1000.0}s
                     |
-                    |📄 STL FILE SAVED:
+                    |📄 FILES SAVED:
                     |${result.stlFilePath}
+                    |
+                    |Also saved:
+                    |- measurements_*.json (measurement data)
+                    |- processing_log_*.txt (detailed logs)
+                    |
+                    |All files in: CMTCast folder
                 """.trimMargin()
                 
                 tvProcessingStatus.text = measurements
