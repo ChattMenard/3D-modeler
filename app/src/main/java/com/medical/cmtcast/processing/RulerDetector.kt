@@ -52,14 +52,16 @@ class RulerDetector {
                 // Ruler should be vertical (height > width)
                 if (aspectRatio > 3.0 && aspectRatio < 15.0 && area > maxArea) {
                     val pixelLength = rect.height.toDouble()
-                    val pixelToMm = RULER_LENGTH_MM / pixelLength
+                    // CORRECT: mm per pixel (how many mm does 1 pixel represent)
+                    val mmPerPixel = RULER_LENGTH_MM / pixelLength
                     
                     // Confidence based on how close it is to expected aspect ratio
                     val confidence = calculateConfidence(aspectRatio, area, frame.width() * frame.height())
                     
                     if (confidence > 0.3) { // Minimum confidence threshold
+                        Log.d(TAG, "Ruler candidate: ${pixelLength.toInt()}px high, scale: $mmPerPixel mm/px")
                         bestRuler = RulerInfo(
-                            pixelToMmRatio = pixelToMm,
+                            pixelToMmRatio = mmPerPixel,  // This is mm/pixel (correct!)
                             rulerRect = rect,
                             confidence = confidence
                         )
@@ -75,7 +77,16 @@ class RulerDetector {
             contours.forEach { it.release() }
             
             if (bestRuler != null) {
-                Log.d(TAG, "Ruler detected: ${bestRuler.pixelToMmRatio} px/mm, confidence: ${bestRuler.confidence}")
+                Log.d(TAG, "✓ Ruler detected: height=${bestRuler.rulerRect.height}px, " +
+                        "width=${bestRuler.rulerRect.width}px, " +
+                        "ratio=${bestRuler.rulerRect.height.toDouble() / bestRuler.rulerRect.width}:1, " +
+                        "scale=${bestRuler.pixelToMmRatio} mm/px, " +
+                        "confidence=${bestRuler.confidence}")
+                Log.d(TAG, "  → If this is 300mm ruler: 1 pixel = ${bestRuler.pixelToMmRatio}mm")
+                Log.d(TAG, "  → Ruler appears to be ${bestRuler.rulerRect.height}px × ${bestRuler.pixelToMmRatio}mm = " +
+                        "${bestRuler.rulerRect.height * bestRuler.pixelToMmRatio}mm tall")
+            } else {
+                Log.w(TAG, "✗ No ruler detected in frame")
             }
             
             return bestRuler

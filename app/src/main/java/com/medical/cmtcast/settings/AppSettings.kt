@@ -17,18 +17,32 @@ object AppSettings {
     
     // Cast Settings
     fun getCastThickness(context: Context): Float {
-        return getPrefs(context).getFloat(
+        val prefs = getPrefs(context)
+        // EditTextPreference stores as String, need to convert
+        val thicknessStr = prefs.getString(
             SettingsActivity.SettingsFragment.KEY_CAST_THICKNESS,
-            SettingsActivity.SettingsFragment.DEFAULT_CAST_THICKNESS
+            SettingsActivity.SettingsFragment.DEFAULT_CAST_THICKNESS.toString()
         )
+        return try {
+            thicknessStr?.toFloatOrNull() ?: SettingsActivity.SettingsFragment.DEFAULT_CAST_THICKNESS
+        } catch (e: Exception) {
+            SettingsActivity.SettingsFragment.DEFAULT_CAST_THICKNESS
+        }
     }
     
     // Ruler Settings
     fun getRulerLength(context: Context): Float {
-        return getPrefs(context).getFloat(
+        val prefs = getPrefs(context)
+        // EditTextPreference stores as String, need to convert
+        val lengthStr = prefs.getString(
             SettingsActivity.SettingsFragment.KEY_RULER_LENGTH,
-            SettingsActivity.SettingsFragment.DEFAULT_RULER_LENGTH
+            SettingsActivity.SettingsFragment.DEFAULT_RULER_LENGTH.toString()
         )
+        return try {
+            lengthStr?.toFloatOrNull() ?: SettingsActivity.SettingsFragment.DEFAULT_RULER_LENGTH
+        } catch (e: Exception) {
+            SettingsActivity.SettingsFragment.DEFAULT_RULER_LENGTH
+        }
     }
     
     fun getRulerUnit(context: Context): String {

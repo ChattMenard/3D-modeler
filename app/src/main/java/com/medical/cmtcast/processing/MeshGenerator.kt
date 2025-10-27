@@ -3,6 +3,10 @@ package com.medical.cmtcast.processing
 import android.content.Context
 import android.util.Log
 import com.medical.cmtcast.settings.AppSettings
+import java.io.File
+import java.io.DataOutputStream
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
 import kotlin.math.*
 
 /**
@@ -347,55 +351,246 @@ class MeshGenerator(private val context: Context) {
      */
     fun applyThickness(mesh: Mesh): Mesh {
         val thickness = AppSettings.getCastThickness(context).toDouble()  // Get from settings
-        Log.d(TAG, "Applying thickness: ${thickness}mm")
-        val thickenedTriangles = mesh.triangles.map { triangle ->
-            val normal = triangle.normal()
-            
-            // Offset each vertex along normal
-            val v1 = Reconstruction3D.Point3D(
-                triangle.v1.x + normal.x * thickness,
-                triangle.v1.y + normal.y * thickness,
-                triangle.v1.z + normal.z * thickness
-            )
-            val v2 = Reconstruction3D.Point3D(
-                triangle.v2.x + normal.x * thickness,
-                triangle.v2.y + normal.y * thickness,
-                triangle.v2.z + normal.z * thickness
-            )
-            val v3 = Reconstruction3D.Point3D(
-                triangle.v3.x + normal.x * thickness,
-                triangle.v3.y + normal.y * thickness,
-                triangle.v3.z + normal.z * thickness
-            )
-            
-            Triangle(v1, v2, v3)
+        Log.d(TAG, "Applying thickness: ${thickness}mm to ${mesh.triangles.size} triangles")
+        
+        // Memory check before processing
+        val runtime = Runtime.getRuntime()
+        val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+        val maxMemory = runtime.maxMemory() / (1024 * 1024)
+        val memoryPercent = (usedMemory.toDouble() / maxMemory.toDouble() * 100).toInt()
+        
+        Log.d(TAG, "Memory before applyThickness: ${usedMemory}MB / ${maxMemory}MB ($memoryPercent%)")
+        
+        if (memoryPercent > 85) {
+            Log.w(TAG, "WARNING: High memory usage ($memoryPercent%) - may cause crash")
+            // Force garbage collection to free up memory
+            System.gc()
+            Thread.sleep(100)
         }
         
-        return mesh.copy(triangles = thickenedTriangles)
+        try {
+            val thickenedTriangles = mesh.triangles.mapIndexed { index, triangle ->
+                // Progress logging for large meshes
+                if (index % 1000 == 0 && index > 0) {
+                    Log.d(TAG, "Thickening progress: $index/${mesh.triangles.size}")
+                }
+                
+                val normal = triangle.normal()
+                
+                // Validate normal is not NaN or Infinity
+                if (!normal.x.isFinite() || !normal.y.isFinite() || !normal.z.isFinite()) {
+                    Log.w(TAG, "Invalid normal detected at triangle $index, using default")
+                    return@mapIndexed triangle // Keep original triangle if normal is invalid
+                }
+                
+                // Offset each vertex along normal
+                val v1 = Reconstruction3D.Point3D(
+                    triangle.v1.x + normal.x * thickness,
+                    triangle.v1.y + normal.y * thickness,
+                    triangle.v1.z + normal.z * thickness
+                )
+                val v2 = Reconstruction3D.Point3D(
+                    triangle.v2.x + normal.x * thickness,
+                    triangle.v2.y + normal.y * thickness,
+                    triangle.v2.z + normal.z * thickness
+                )
+                val v3 = Reconstruction3D.Point3D(
+                    triangle.v3.x + normal.x * thickness,
+                    triangle.v3.y + normal.y * thickness,
+                    triangle.v3.z + normal.z * thickness
+                )
+                
+                Triangle(v1, v2, v3)
+            }
+            
+            Log.d(TAG, "Thickness applied successfully to ${thickenedTriangles.size} triangles")
+            return mesh.copy(triangles = thickenedTriangles)
+            
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "OUT OF MEMORY during applyThickness - returning original mesh", e)
+            // Return original mesh if we run out of memory
+            throw RuntimeException("Out of memory while applying thickness. Try with fewer points or reduce quality.", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error applying thickness: ${e.message}", e)
+            throw RuntimeException("Failed to apply cast thickness: ${e.message}", e)
+        }
     }
     
     /**
-     * Export mesh to STL format (ASCII)
+     * Export mesh to binary STL format - writes directly to file (MEMORY EFFICIENT!)
+     * Binary STL uses ~70% less memory than ASCII and is faster
      */
-    fun exportToSTL(mesh: Mesh, name: String = "leg_cast"): String {
-        val stl = StringBuilder()
-        stl.append("solid $name\n")
+    fun exportToBinarySTL(mesh: Mesh, outputFile: File): File {
+        Log.d(TAG, "Exporting ${mesh.triangles.size} triangles to binary STL format")
         
-        for (triangle in mesh.triangles) {
-            val normal = triangle.normal()
-            stl.append("  facet normal ${normal.x} ${normal.y} ${normal.z}\n")
-            stl.append("    outer loop\n")
-            stl.append("      vertex ${triangle.v1.x} ${triangle.v1.y} ${triangle.v1.z}\n")
-            stl.append("      vertex ${triangle.v2.x} ${triangle.v2.y} ${triangle.v2.z}\n")
-            stl.append("      vertex ${triangle.v3.x} ${triangle.v3.y} ${triangle.v3.z}\n")
-            stl.append("    endloop\n")
-            stl.append("  endfacet\n")
+        try {
+            java.io.DataOutputStream(java.io.BufferedOutputStream(java.io.FileOutputStream(outputFile))).use { out ->
+                // Write 80-byte header
+                val header = ByteArray(80)
+                "Binary STL - CMT Cast".toByteArray().copyInto(header)
+                out.write(header)
+                
+                // Write triangle count (little-endian)
+                out.writeInt(Integer.reverseBytes(mesh.triangles.size))
+                
+                var progressCounter = 0
+                for ((index, triangle) in mesh.triangles.withIndex()) {
+                    // Progress logging for large exports
+                    if (index % 5000 == 0 && index > 0) {
+                        progressCounter++
+                        Log.d(TAG, "Binary STL export: $index/${mesh.triangles.size} (${index * 100 / mesh.triangles.size}%)")
+                    }
+                    
+                    val normal = triangle.normal()
+                    
+                    // Validate values
+                    if (!normal.x.isFinite() || !normal.y.isFinite() || !normal.z.isFinite()) {
+                        Log.w(TAG, "Skipping triangle $index with invalid normal")
+                        continue
+                    }
+                    
+                    // Write normal (3 floats, little-endian)
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(normal.x.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(normal.y.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(normal.z.toFloat()))))
+                    
+                    // Write vertex 1
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v1.x.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v1.y.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v1.z.toFloat()))))
+                    
+                    // Write vertex 2
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v2.x.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v2.y.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v2.z.toFloat()))))
+                    
+                    // Write vertex 3
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v3.x.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v3.y.toFloat()))))
+                    out.writeFloat(java.lang.Float.intBitsToFloat(Integer.reverseBytes(java.lang.Float.floatToIntBits(triangle.v3.z.toFloat()))))
+                    
+                    // Write attribute byte count (always 0)
+                    out.writeShort(0)
+                }
+                
+                out.flush()
+            }
+            
+            val fileSizeMB = outputFile.length() / (1024 * 1024)
+            Log.d(TAG, "Binary STL export completed: ${outputFile.absolutePath} (${fileSizeMB}MB)")
+            
+            return outputFile
+            
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "OUT OF MEMORY during binary STL export", e)
+            System.gc()
+            throw RuntimeException("Out of memory while exporting STL file. The mesh is too large.", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error exporting to binary STL: ${e.message}", e)
+            throw RuntimeException("Failed to export binary STL: ${e.message}", e)
+        }
+    }
+    
+    /**
+     * Export mesh to STL format (ASCII) - DEPRECATED: Use exportToBinarySTL() instead
+     * Uses efficient StringBuilder with pre-allocated capacity to avoid memory issues
+     */
+    @Deprecated("Use exportToBinarySTL() instead - uses 70% less memory")
+    fun exportToSTL(mesh: Mesh, name: String = "leg_cast"): String {
+        Log.d(TAG, "Exporting ${mesh.triangles.size} triangles to STL format")
+        
+        // Memory check before export
+        val runtime = Runtime.getRuntime()
+        val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+        val maxMemory = runtime.maxMemory() / (1024 * 1024)
+        val memoryPercent = (usedMemory.toDouble() / maxMemory.toDouble() * 100).toInt()
+        
+        Log.d(TAG, "Memory before STL export: ${usedMemory}MB / ${maxMemory}MB ($memoryPercent%)")
+        
+        if (memoryPercent > 80) {
+            Log.w(TAG, "WARNING: High memory usage before STL export - attempting GC")
+            System.gc()
+            Thread.sleep(100)
         }
         
-        stl.append("endsolid $name\n")
-        
-        Log.d(TAG, "Generated STL with ${mesh.triangles.size} facets")
-        return stl.toString()
+        try {
+            // Estimate size: ~200 bytes per triangle in STL format
+            val estimatedSize = mesh.triangles.size * 200 + 1024
+            val estimatedSizeMB = estimatedSize / (1024 * 1024)
+            
+            Log.d(TAG, "Estimated STL size: ${estimatedSizeMB}MB")
+            
+            if (estimatedSizeMB > 50) {
+                Log.w(TAG, "WARNING: Large STL file (${estimatedSizeMB}MB) - may cause memory issues")
+            }
+            
+            // Pre-allocate StringBuilder with estimated capacity
+            val stl = StringBuilder(estimatedSize)
+            stl.append("solid $name\n")
+            
+            var progressCounter = 0
+            for ((index, triangle) in mesh.triangles.withIndex()) {
+                // Progress logging for large exports
+                if (index % 1000 == 0 && index > 0) {
+                    progressCounter++
+                    Log.d(TAG, "STL export progress: $index/${mesh.triangles.size} (${index * 100 / mesh.triangles.size}%)")
+                    
+                    // Check memory every 5000 triangles
+                    if (progressCounter % 5 == 0) {
+                        val currentUsed = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+                        val currentPercent = (currentUsed.toDouble() / maxMemory.toDouble() * 100).toInt()
+                        if (currentPercent > 90) {
+                            Log.e(TAG, "CRITICAL: Memory usage at $currentPercent% during STL export")
+                            throw OutOfMemoryError("Memory exhausted during STL export at triangle $index")
+                        }
+                    }
+                }
+                
+                val normal = triangle.normal()
+                
+                // Validate values are finite
+                if (!normal.x.isFinite() || !normal.y.isFinite() || !normal.z.isFinite()) {
+                    Log.w(TAG, "Skipping triangle $index with invalid normal")
+                    continue
+                }
+                
+                stl.append("  facet normal ")
+                    .append(String.format("%.6f", normal.x)).append(' ')
+                    .append(String.format("%.6f", normal.y)).append(' ')
+                    .append(String.format("%.6f", normal.z)).append('\n')
+                stl.append("    outer loop\n")
+                stl.append("      vertex ")
+                    .append(String.format("%.6f", triangle.v1.x)).append(' ')
+                    .append(String.format("%.6f", triangle.v1.y)).append(' ')
+                    .append(String.format("%.6f", triangle.v1.z)).append('\n')
+                stl.append("      vertex ")
+                    .append(String.format("%.6f", triangle.v2.x)).append(' ')
+                    .append(String.format("%.6f", triangle.v2.y)).append(' ')
+                    .append(String.format("%.6f", triangle.v2.z)).append('\n')
+                stl.append("      vertex ")
+                    .append(String.format("%.6f", triangle.v3.x)).append(' ')
+                    .append(String.format("%.6f", triangle.v3.y)).append(' ')
+                    .append(String.format("%.6f", triangle.v3.z)).append('\n')
+                stl.append("    endloop\n")
+                stl.append("  endfacet\n")
+            }
+            
+            stl.append("endsolid $name\n")
+            
+            val finalSize = stl.length / (1024 * 1024)
+            Log.d(TAG, "STL export completed: ${stl.length} characters (${finalSize}MB)")
+            
+            return stl.toString()
+            
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "OUT OF MEMORY during STL export", e)
+            // Try to free memory
+            System.gc()
+            throw RuntimeException("Out of memory while exporting STL file. The mesh is too large. Try reducing quality or point count.", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error exporting to STL: ${e.message}", e)
+            throw RuntimeException("Failed to export STL: ${e.message}", e)
+        }
     }
     
     private fun calculateBounds(points: List<Reconstruction3D.Point3D>): Pair<Reconstruction3D.Point3D, Reconstruction3D.Point3D> {

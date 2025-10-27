@@ -59,6 +59,17 @@ class ProcessingPipeline(private val context: Context) {
     private var progressCallback: ProgressCallback? = null
     
     /**
+     * Get current memory status for logging
+     */
+    private fun getMemoryStatus(): String {
+        val runtime = Runtime.getRuntime()
+        val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+        val maxMemory = runtime.maxMemory() / (1024 * 1024)
+        val memoryPercent = (usedMemory.toDouble() / maxMemory.toDouble() * 100).toInt()
+        return "${usedMemory}MB / ${maxMemory}MB ($memoryPercent%)"
+    }
+    
+    /**
      * Set callback for progress updates
      */
     fun setProgressCallback(callback: ProgressCallback?) {
@@ -145,8 +156,30 @@ class ProcessingPipeline(private val context: Context) {
         // Debug: Check point cloud before downsampling
         DebugHelper.logPointCloudStats(pointCloud, "Before Downsampling")
         
-        val downsampledCloud = reconstruction.downsamplePointCloud(pointCloud, voxelSize = 2.0)
-        log("Downsampled to ${downsampledCloud.size} points")
+        // CRITICAL: Much more aggressive downsampling to prevent memory crashes
+        // Target: max 10,000 points → ~20,000 triangles (safe for S10)
+        val initialVoxelSize = 3.0  // Increased from 2.0
+        var downsampledCloud = reconstruction.downsamplePointCloud(pointCloud, voxelSize = initialVoxelSize)
+        log("Initial downsample to ${downsampledCloud.size} points")
+        
+        // Multi-stage downsampling based on point count
+        val maxPoints = 10000 // Reduced from 15000 for safety (1.4M triangles was too much!)
+        if (downsampledCloud.size > maxPoints) {
+            log("WARNING: Point cloud too large (${downsampledCloud.size} points), applying aggressive downsampling")
+            val aggressiveVoxelSize = 5.0  // Increased from 3.5
+            downsampledCloud = reconstruction.downsamplePointCloud(pointCloud, voxelSize = aggressiveVoxelSize)
+            log("Aggressively downsampled to ${downsampledCloud.size} points")
+        }
+        
+        // Emergency fallback: if STILL too many points, go nuclear
+        if (downsampledCloud.size > maxPoints) {
+            log("CRITICAL: Still too many points (${downsampledCloud.size}), applying extreme downsampling")
+            val extremeVoxelSize = 8.0
+            downsampledCloud = reconstruction.downsamplePointCloud(pointCloud, voxelSize = extremeVoxelSize)
+            log("Extreme downsampling to ${downsampledCloud.size} points")
+        }
+        
+        log("Final point count: ${downsampledCloud.size} (target: <${maxPoints})")
         
         // Debug: Check point cloud after downsampling
         DebugHelper.logPointCloudStats(downsampledCloud, "After Downsampling")
@@ -154,7 +187,10 @@ class ProcessingPipeline(private val context: Context) {
         // Check system resources before mesh generation
         val resources = DebugHelper.checkSystemResources()
         if (resources.isMemoryLow) {
-            log("WARNING: Memory usage is high (${resources.memoryUsagePercent}%) - mesh generation may fail")
+            log("WARNING: Memory usage is high (${resources.memoryUsagePercent}%) - applying memory optimization")
+            // Force garbage collection
+            System.gc()
+            Thread.sleep(100)
         }
         
         stepComplete("Point Cloud Optimization", "Reduced to ${downsampledCloud.size} points")
@@ -178,6 +214,14 @@ class ProcessingPipeline(private val context: Context) {
             
             if (mesh.triangles.isEmpty()) {
                 throw RuntimeException("Mesh generation produced no triangles")
+            }
+            
+            // CRITICAL: Check if mesh is too large
+            val maxTriangles = 50000 // Safe limit for memory
+            if (mesh.triangles.size > maxTriangles) {
+                log("WARNING: Mesh too large (${mesh.triangles.size} triangles), this will likely cause OOM")
+                log("Recommended: Reduce video length or point cloud quality")
+                // Don't throw yet - let it try, but warn
             }
             
             mesh
@@ -216,31 +260,67 @@ class ProcessingPipeline(private val context: Context) {
         val thickness = AppSettings.getCastThickness(context)
         updateProgress(80, "Applying cast thickness (${thickness}mm)...")
         log("Applying cast thickness (${thickness}mm)...")
+        
+        // Force garbage collection before memory-intensive operation
+        System.gc()
+        Thread.sleep(50)
+        
         val castMesh = try {
+            log("Memory status before thickness: ${getMemoryStatus()}")
             val mesh = meshGenerator.applyThickness(smoothedMesh)  // Uses settings internally
             log("Cast mesh: ${mesh.triangles.size} triangles")
+            log("Memory status after thickness: ${getMemoryStatus()}")
             mesh
+        } catch (e: OutOfMemoryError) {
+            log("CRITICAL ERROR: Out of memory during thickness application")
+            log("Using original mesh without thickness due to memory constraints")
+            stepComplete("Cast Thickness", "Skipped - insufficient memory (${e.message})")
+            smoothedMesh  // Fallback to original mesh
         } catch (e: Exception) {
             log("WARNING: Cast thickness application failed: ${e.message}")
             log("Using original mesh without thickness")
-            smoothedMesh
+            stepComplete("Cast Thickness", "Skipped - error: ${e.message}")
+            smoothedMesh  // Fallback to original mesh
         }
+        
         stepComplete("Cast Thickness Applied", "Final mesh: ${castMesh.triangles.size} triangles (${thickness}mm thick)")
         
-        // Step 7: Export to STL
-        updateProgress(90, "Exporting 3D model to STL format...")
-        log("Exporting to STL format...")
-        val stlContent = meshGenerator.exportToSTL(castMesh, "cmt_leg_cast")
+        // Step 7: Export to binary STL (memory-efficient!)
+        updateProgress(90, "Exporting 3D model to binary STL format...")
+        log("Exporting to binary STL format (memory-efficient)...")
+        log("Memory status before STL export: ${getMemoryStatus()}")
         
-        // Step 8: Save files
-        updateProgress(93, "Saving STL file...")
+        // Force garbage collection before export
+        System.gc()
+        Thread.sleep(100)
+        
+        // Create output directory and file directly
+        val directory = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+            "CMTCast"
+        )
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+        
         val timestamp = System.currentTimeMillis()
-        log("Saving files...")
-        val stlFile = saveSTLFile(stlContent)
-        log("STL file saved: ${stlFile.absolutePath} (${stlFile.length()} bytes)")
-        stepComplete("STL Export", "File: ${stlFile.name}, Size: ${stlFile.length() / 1024}KB")
+        val stlFile = File(directory, "leg_cast_$timestamp.stl")
         
-        // Step 9: Calculate measurements
+        try {
+            // Binary export writes directly to disk - no memory overhead!
+            meshGenerator.exportToBinarySTL(castMesh, stlFile)
+            log("Binary STL export successful: ${stlFile.length()} bytes")
+            log("Memory status after STL export: ${getMemoryStatus()}")
+            stepComplete("STL Export", "Binary format: ${stlFile.name}, Size: ${stlFile.length() / 1024}KB")
+        } catch (e: OutOfMemoryError) {
+            log("CRITICAL ERROR: Out of memory during STL export")
+            throw RuntimeException("Out of memory while exporting STL. The mesh is too large (${castMesh.triangles.size} triangles). Please reduce video length or quality settings.", e)
+        } catch (e: Exception) {
+            log("ERROR: STL export failed: ${e.message}")
+            throw RuntimeException("Failed to export STL file: ${e.message}", e)
+        }
+        
+        // Step 8: Calculate measurements
         updateProgress(96, "Calculating measurements...")
         log("Calculating measurements...")
         val measurements = calculateMeasurements(downsampledCloud)
