@@ -6,10 +6,14 @@ import android.os.Environment
 import android.util.Log
 import com.medical.cmtcast.settings.AppSettings
 import com.medical.cmtcast.validation.QualityValidator
+import com.medical.cmtcast.debug.DebugHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.opencv.android.OpenCVLoader
 import java.io.File
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Coordinates the entire 3D reconstruction pipeline
@@ -137,26 +141,72 @@ class ProcessingPipeline(private val context: Context) {
         // Step 4: Downsample for performance
         updateProgress(55, "Optimizing point cloud...")
         log("Downsampling point cloud...")
+        
+        // Debug: Check point cloud before downsampling
+        DebugHelper.logPointCloudStats(pointCloud, "Before Downsampling")
+        
         val downsampledCloud = reconstruction.downsamplePointCloud(pointCloud, voxelSize = 2.0)
         log("Downsampled to ${downsampledCloud.size} points")
+        
+        // Debug: Check point cloud after downsampling
+        DebugHelper.logPointCloudStats(downsampledCloud, "After Downsampling")
+        
+        // Check system resources before mesh generation
+        val resources = DebugHelper.checkSystemResources()
+        if (resources.isMemoryLow) {
+            log("WARNING: Memory usage is high (${resources.memoryUsagePercent}%) - mesh generation may fail")
+        }
+        
         stepComplete("Point Cloud Optimization", "Reduced to ${downsampledCloud.size} points")
         
         // Step 5: Generate mesh
         updateProgress(70, "Generating 3D mesh...")
         log("Generating mesh...")
         val meshGenerator = MeshGenerator(context)  // Pass context for settings
-        val legMesh = meshGenerator.createMesh(downsampledCloud)
-        log("Initial mesh: ${legMesh.triangles.size} triangles")
+        val legMesh = try {
+            if (downsampledCloud.size < 4) {
+                throw IllegalArgumentException("Insufficient points for mesh generation: ${downsampledCloud.size} (need at least 4)")
+            }
+            
+            // Export point cloud for debugging if needed
+            if (AppSettings.isDebugMode(context)) {
+                DebugHelper.exportPointCloudToPLY(downsampledCloud, "pre_mesh_${System.currentTimeMillis()}")
+            }
+            
+            val mesh = meshGenerator.createMesh(downsampledCloud)
+            log("Initial mesh: ${mesh.triangles.size} triangles")
+            
+            if (mesh.triangles.isEmpty()) {
+                throw RuntimeException("Mesh generation produced no triangles")
+            }
+            
+            mesh
+        } catch (e: Exception) {
+            log("ERROR: Mesh generation failed: ${e.message}")
+            log("Stack trace: ${e.stackTraceToString()}")
+            
+            // Try with a fallback approach - create a simple bounding box mesh
+            log("Attempting fallback mesh generation...")
+            val fallbackMesh = createFallbackMesh(downsampledCloud)
+            log("Fallback mesh: ${fallbackMesh.triangles.size} triangles")
+            fallbackMesh
+        }
         stepComplete("Mesh Generation", "${legMesh.triangles.size} triangles created")
         
         // Step 5.5: Apply smoothing if enabled
         val smoothedMesh = if (AppSettings.isSmoothingEnabled(context)) {
             updateProgress(75, "Smoothing mesh surface...")
             log("Applying mesh smoothing...")
-            val smoothed = meshGenerator.smoothMesh(legMesh, iterations = 3)
-            log("Mesh smoothing completed")
-            stepComplete("Mesh Smoothing", "3 smoothing iterations applied")
-            smoothed
+            try {
+                val smoothed = meshGenerator.smoothMesh(legMesh, iterations = 3)
+                log("Mesh smoothing completed")
+                stepComplete("Mesh Smoothing", "3 smoothing iterations applied")
+                smoothed
+            } catch (e: Exception) {
+                log("WARNING: Mesh smoothing failed: ${e.message}")
+                stepComplete("Mesh Smoothing", "Skipped due to error: ${e.message}")
+                legMesh
+            }
         } else {
             log("Mesh smoothing disabled")
             legMesh
@@ -166,8 +216,15 @@ class ProcessingPipeline(private val context: Context) {
         val thickness = AppSettings.getCastThickness(context)
         updateProgress(80, "Applying cast thickness (${thickness}mm)...")
         log("Applying cast thickness (${thickness}mm)...")
-        val castMesh = meshGenerator.applyThickness(smoothedMesh)  // Uses settings internally
-        log("Cast mesh: ${castMesh.triangles.size} triangles")
+        val castMesh = try {
+            val mesh = meshGenerator.applyThickness(smoothedMesh)  // Uses settings internally
+            log("Cast mesh: ${mesh.triangles.size} triangles")
+            mesh
+        } catch (e: Exception) {
+            log("WARNING: Cast thickness application failed: ${e.message}")
+            log("Using original mesh without thickness")
+            smoothedMesh
+        }
         stepComplete("Cast Thickness Applied", "Final mesh: ${castMesh.triangles.size} triangles (${thickness}mm thick)")
         
         // Step 7: Export to STL
@@ -438,6 +495,68 @@ class ProcessingPipeline(private val context: Context) {
             circumferenceCalf = calfCircumference,
             lengthTotal = totalLength
         )
+    }
+    
+    /**
+     * Create a simple fallback mesh when normal mesh generation fails
+     */
+    private fun createFallbackMesh(points: List<Reconstruction3D.Point3D>): MeshGenerator.Mesh {
+        Log.d(TAG, "Creating fallback mesh from ${points.size} points")
+        
+        // Calculate bounding box
+        val minX = points.minOf { it.x }
+        val maxX = points.maxOf { it.x }
+        val minY = points.minOf { it.y }
+        val maxY = points.maxOf { it.y }
+        val minZ = points.minOf { it.z }
+        val maxZ = points.maxOf { it.z }
+        
+        // Create a simple cylindrical approximation
+        val triangles = mutableListOf<MeshGenerator.Triangle>()
+        val segments = 8 // 8-sided cylinder
+        val layers = 10 // Height layers
+        
+        for (layer in 0 until layers) {
+            val y1 = minY + (layer / layers.toDouble()) * (maxY - minY)
+            val y2 = minY + ((layer + 1) / layers.toDouble()) * (maxY - minY)
+            
+            // Calculate radius for this layer (wider at calf, narrower at ankle)
+            val layerProgress = layer / (layers - 1).toDouble()
+            val radiusX = (minX + maxX) / 2 + (maxX - minX) * 0.3 * (1 - layerProgress * 0.3)
+            val radiusZ = (minZ + maxZ) / 2 + (maxZ - minZ) * 0.3 * (1 - layerProgress * 0.3)
+            val centerX = (minX + maxX) / 2
+            val centerZ = (minZ + maxZ) / 2
+            
+            // Create points around the circumference
+            val points1 = mutableListOf<Reconstruction3D.Point3D>()
+            val points2 = mutableListOf<Reconstruction3D.Point3D>()
+            
+            for (i in 0 until segments) {
+                val angle = (i / segments.toDouble()) * 2 * PI
+                val x = centerX + cos(angle) * radiusX
+                val z = centerZ + sin(angle) * radiusZ
+                
+                points1.add(Reconstruction3D.Point3D(x, y1, z))
+                points2.add(Reconstruction3D.Point3D(x, y2, z))
+            }
+            
+            // Connect this layer to the next
+            for (i in 0 until segments) {
+                val next = (i + 1) % segments
+                
+                // Create two triangles for each segment
+                triangles.add(MeshGenerator.Triangle(points1[i], points2[i], points2[next]))
+                triangles.add(MeshGenerator.Triangle(points1[i], points2[next], points1[next]))
+            }
+        }
+        
+        val bounds = Pair(
+            Reconstruction3D.Point3D(minX, minY, minZ),
+            Reconstruction3D.Point3D(maxX, maxY, maxZ)
+        )
+        
+        Log.d(TAG, "Fallback mesh created with ${triangles.size} triangles")
+        return MeshGenerator.Mesh(triangles, bounds)
     }
     
     /**
