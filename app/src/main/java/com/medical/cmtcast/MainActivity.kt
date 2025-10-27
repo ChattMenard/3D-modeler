@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.medical.cmtcast.camera.CameraActivity
+import com.medical.cmtcast.disclaimer.DisclaimerActivity
+import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +31,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Defensive check - ensure disclaimer was accepted
+        if (!DisclaimerActivity.hasAcceptedDisclaimer(this)) {
+            startActivity(Intent(this, DisclaimerActivity::class.java))
+            finish()
+            return
+        }
+        
         setContentView(R.layout.activity_main)
+        
+        // Initialize OpenCV
+        if (!OpenCVLoader.initDebug()) {
+            Toast.makeText(this, "OpenCV initialization failed!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "OpenCV loaded successfully", Toast.LENGTH_SHORT).show()
+        }
         
         btnStartMeasurement = findViewById(R.id.btnStartMeasurement)
         tvPermissionStatus = findViewById(R.id.tvPermissionStatus)

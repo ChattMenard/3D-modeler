@@ -57,8 +57,8 @@ dependencies {
     implementation 'androidx.camera:camera-view:1.2.0'
     implementation 'androidx.camera:camera-video:1.2.0'
     
-    // OpenCV for computer vision - TODO: Add manually or via alternative method
-    // implementation 'org.opencv:opencv:4.5.3'
+    // OpenCV for computer vision
+    implementation project(':opencv-java')
     
     // Coroutines for async processing
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'

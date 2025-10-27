@@ -214,6 +214,7 @@ attr buttonStyle
 attr buttonStyleSmall
 attr buttonTint
 attr buttonTintMode
+attr camera_id
 attr cardBackgroundColor
 attr cardCornerRadius
 attr cardElevation
@@ -997,6 +998,7 @@ attr showMotionSpec
 attr showPaths
 attr showText
 attr showTitle
+attr show_fps
 attr shrinkMotionSpec
 attr sideSheetDialogTheme
 attr sideSheetModalStyle
@@ -2895,6 +2897,7 @@ id animateToEnd
 id animateToStart
 id antiClockwise
 id anticipate
+id any
 id arc
 id asConfigured
 id async
@@ -2902,6 +2905,7 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id back
 id barrier
 id baseline
 id beginOnFirstDraw
@@ -2913,15 +2917,21 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnAccept
 id btnBack
 id btnCapture
+id btnClose
+id btnDecline
 id btnMedicalDisclaimer
 id btnNext
 id btnProceedToCastDesign
 id btnProcessMeasurements
 id btnRetake
 id btnRetakeMeasurements
+id btnShareAll
+id btnShareSTL
 id btnStartMeasurement
+id btnView3DModel
 id btnViewInstructions
 id buttonPanel
 id cache_measures
@@ -2938,6 +2948,9 @@ id chain
 id chain2
 id chains
 id checkbox
+id checkboxConsult
+id checkboxNotFDA
+id checkboxUnderstand
 id checked
 id chronometer
 id circle_center
@@ -3025,10 +3038,12 @@ id flip
 id floating
 id forever
 id fragment_container_view_tag
+id front
 id frost
 id fullscreen_header
 id ghost_view
 id ghost_view_holder
+id glSurfaceView
 id gone
 id graph
 id graph_wrap
@@ -3060,6 +3075,7 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layoutShareButtons
 id left
 id leftToRight
 id legacy
@@ -3169,6 +3185,7 @@ id pin
 id position
 id postLayout
 id pressed
+id progressBar
 id progressCapture
 id progress_circular
 id progress_horizontal
@@ -3182,6 +3199,7 @@ id right_icon
 id right_side
 id rounded
 id row_index_key
+id rulerOverlay
 id rvMeasurements
 id save_non_transition_alpha
 id save_overlay_view
@@ -3310,7 +3328,9 @@ id tvInstructions
 id tvMeasurementResults
 id tvPermissionStatus
 id tvProcessingStatus
+id tvProgressPercent
 id tvStepIndicator
+id tvStepLog
 id unchecked
 id uniform
 id unlabeled
@@ -3442,8 +3462,10 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_camera
+layout activity_disclaimer
 layout activity_main
 layout activity_measurement
+layout activity_model3d_viewer
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
@@ -4829,6 +4851,7 @@ styleable BottomAppBar addElevationShadow backgroundTint elevation fabAlignmentM
 styleable BottomNavigationView android_minHeight compatShadowEnabled itemHorizontalTranslationEnabled
 styleable BottomSheetBehavior_Layout android_maxWidth android_maxHeight android_elevation backgroundTint behavior_draggable behavior_expandedOffset behavior_fitToContents behavior_halfExpandedRatio behavior_hideable behavior_peekHeight behavior_saveFlags behavior_significantVelocityThreshold behavior_skipCollapsed gestureInsetBottomIgnored marginLeftSystemWindowInsets marginRightSystemWindowInsets marginTopSystemWindowInsets paddingBottomSystemWindowInsets paddingLeftSystemWindowInsets paddingRightSystemWindowInsets paddingTopSystemWindowInsets shapeAppearance shapeAppearanceOverlay shouldRemoveExpandedCorners
 styleable ButtonBarLayout allowStacking
+styleable CameraBridgeViewBase camera_id show_fps
 styleable Capability queryPatterns shortcutMatchRequired
 styleable CardView android_minWidth android_minHeight cardBackgroundColor cardCornerRadius cardElevation cardMaxElevation cardPreventCornerOverlap cardUseCompatPadding contentPadding contentPaddingBottom contentPaddingLeft contentPaddingRight contentPaddingTop
 styleable Carousel carousel_backwardTransition carousel_emptyViewsBehavior carousel_firstView carousel_forwardTransition carousel_infinite carousel_nextState carousel_previousState carousel_touchUpMode carousel_touchUp_dampeningFactor carousel_touchUp_velocityThreshold
@@ -4960,4 +4983,5 @@ styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration
 styleable include constraintSet
 xml backup_rules
 xml data_extraction_rules
+xml file_paths
 xml provider_paths

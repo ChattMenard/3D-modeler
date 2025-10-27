@@ -1,9 +1,20 @@
 -- Merging decision tree log ---
+provider#androidx.core.content.FileProvider
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:60:9-68:20
+	android:grantUriPermissions
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:64:13-47
+	android:authorities
+		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:62:13-64
+	android:exported
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:63:13-37
+	android:name
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:61:13-62
 manifest
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
 MERGED from [androidx.databinding:viewbinding:7.4.2] C:\Users\mattc\.gradle\caches\transforms-3\dd2f02c8e6d3cb130c8843354afc5261\transformed\jetified-viewbinding-7.4.2\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.8.0] C:\Users\mattc\.gradle\caches\transforms-3\e3fc81b7d612c75989b38f442c75e013\transformed\material-1.8.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\mattc\.gradle\caches\transforms-3\735cde9119ee370c109caa28ad23ccf0\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
@@ -40,6 +51,7 @@ MERGED from [androidx.customview:customview:1.1.0] C:\Users\mattc\.gradle\caches
 MERGED from [androidx.core:core:1.9.0] C:\Users\mattc\.gradle\caches\transforms-3\13a7485356de46965324cadf00f3ca30\transformed\core-1.9.0\AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] C:\Users\mattc\.gradle\caches\transforms-3\6b5bc0aac4ffa5f74dfe50ad69309769\transformed\lifecycle-runtime-2.6.1\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.1] C:\Users\mattc\.gradle\caches\transforms-3\0f2bb8de347c90f9478f04204669ef8d\transformed\jetified-lifecycle-runtime-ktx-2.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [:opencv-java] C:\Users\mattc\deans leg\opencv-java\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\5c5f95bde632152f67b8eee80ae09212\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\d9e1919b05bd0fe1e0c007e3dcf9dd67\transformed\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.exifinterface:exifinterface:1.3.2] C:\Users\mattc\.gradle\caches\transforms-3\1f0b71caecdfc703f1aff94b0e477265\transformed\exifinterface-1.3.2\AndroidManifest.xml:17:1-24:12
@@ -53,22 +65,22 @@ MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\mattc\.gradle\ca
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\4c42dbc66b6b6a3d5c160c59ca0d7a21\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\871153d3aed31a7574588357fdf0dd7d\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\mattc\.gradle\caches\transforms-3\9ce5e192fd7eda252256864b64dbc5f2\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
+INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
 	package
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
 	xmlns:tools
 		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:3:5-51
 	android:versionCode
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-49:12
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:1-71:12
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:2:11-69
@@ -93,7 +105,7 @@ ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:13:5-15:36
 	android:name
 		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:14:9-57
 application
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:17:5-48:19
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:17:5-70:19
 MERGED from [com.google.android.material:material:1.8.0] C:\Users\mattc\.gradle\caches\transforms-3\e3fc81b7d612c75989b38f442c75e013\transformed\material-1.8.0\AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.8.0] C:\Users\mattc\.gradle\caches\transforms-3\e3fc81b7d612c75989b38f442c75e013\transformed\material-1.8.0\AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\mattc\.gradle\caches\transforms-3\735cde9119ee370c109caa28ad23ccf0\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -134,40 +146,56 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\mattc\.gradle\cach
 		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:25:9-45
 	android:dataExtractionRules
 		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:19:9-65
-activity#com.medical.cmtcast.MainActivity
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:28:9-36:20
+activity#com.medical.cmtcast.disclaimer.DisclaimerActivity
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:29:9-37:20
 	android:screenOrientation
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:31:13-49
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:32:13-49
 	android:exported
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:30:13-36
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:31:13-36
 	android:name
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:29:13-41
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:30:13-58
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:32:13-35:29
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:33:13-36:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:33:17-69
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:34:17-69
 	android:name
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:33:25-66
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:34:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:34:17-77
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:35:17-77
 	android:name
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:34:27-74
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:35:27-74
+activity#com.medical.cmtcast.MainActivity
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:39:9-42:52
+	android:screenOrientation
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:42:13-49
+	android:exported
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:41:13-37
+	android:name
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:40:13-41
 activity#com.medical.cmtcast.camera.CameraActivity
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:38:9-41:52
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:44:9-47:52
 	android:screenOrientation
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:41:13-49
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:47:13-49
 	android:exported
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:40:13-37
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:46:13-37
 	android:name
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:39:13-50
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:45:13-50
 activity#com.medical.cmtcast.measurement.MeasurementActivity
-ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:43:9-46:52
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:49:9-52:52
 	android:screenOrientation
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:46:13-49
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:52:13-49
 	android:exported
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:45:13-37
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:51:13-37
 	android:name
-		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:44:13-60
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:50:13-60
+activity#com.medical.cmtcast.viewer.Model3DViewerActivity
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:54:9-57:53
+	android:screenOrientation
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:57:13-50
+	android:exported
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:56:13-37
+	android:name
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:55:13-57
 uses-sdk
 INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
@@ -244,6 +272,8 @@ MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] C:\Users\mattc\.gradle\
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] C:\Users\mattc\.gradle\caches\transforms-3\6b5bc0aac4ffa5f74dfe50ad69309769\transformed\lifecycle-runtime-2.6.1\AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.1] C:\Users\mattc\.gradle\caches\transforms-3\0f2bb8de347c90f9478f04204669ef8d\transformed\jetified-lifecycle-runtime-ktx-2.6.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.1] C:\Users\mattc\.gradle\caches\transforms-3\0f2bb8de347c90f9478f04204669ef8d\transformed\jetified-lifecycle-runtime-ktx-2.6.1\AndroidManifest.xml:20:5-44
+MERGED from [:opencv-java] C:\Users\mattc\deans leg\opencv-java\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:opencv-java] C:\Users\mattc\deans leg\opencv-java\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\5c5f95bde632152f67b8eee80ae09212\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\5c5f95bde632152f67b8eee80ae09212\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\mattc\.gradle\caches\transforms-3\d9e1919b05bd0fe1e0c007e3dcf9dd67\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
@@ -280,6 +310,12 @@ INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
 		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:65:13-67:54
+	android:resource
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:67:17-51
+	android:name
+		ADDED from C:\Users\mattc\deans leg\app\src\main\AndroidManifest.xml:66:17-67
 service#androidx.camera.core.impl.MetadataHolderService
 ADDED from [androidx.camera:camera-camera2:1.2.0] C:\Users\mattc\.gradle\caches\transforms-3\3e692e96dafa8d860c42e8341d49a54f\transformed\jetified-camera-camera2-1.2.0\AndroidManifest.xml:24:9-33:19
 MERGED from [androidx.camera:camera-core:1.2.0] C:\Users\mattc\.gradle\caches\transforms-3\a576c9c614b73e19d45b9f75128f2f81\transformed\jetified-camera-core-1.2.0\AndroidManifest.xml:29:9-33:78

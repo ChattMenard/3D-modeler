@@ -6,12 +6,22 @@
     android:orientation="vertical"
     android:background="@color/background_dark">
 
-    <!-- Camera preview -->
-    <androidx.camera.view.PreviewView
-        android:id="@+id/viewFinder"
+    <!-- Camera preview with overlay -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+        
+        <androidx.camera.view.PreviewView
+            android:id="@+id/viewFinder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        
+        <com.medical.cmtcast.camera.RulerOverlayView
+            android:id="@+id/rulerOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <!-- Overlay controls -->
     <LinearLayout

@@ -39,3 +39,4 @@ com.medical.cmtcast.app-packageDebugResources-37 C:\Users\mattc\deans leg\app\bu
 com.medical.cmtcast.app-merged_res-38 C:\Users\mattc\deans leg\app\build\intermediates\merged_res\debug
 com.medical.cmtcast.app-debug-39 C:\Users\mattc\deans leg\app\src\debug\res
 com.medical.cmtcast.app-main-40 C:\Users\mattc\deans leg\app\src\main\res
+com.medical.cmtcast.app-packaged_res-41 C:\Users\mattc\deans leg\opencv-java\build\intermediates\packaged_res\debug

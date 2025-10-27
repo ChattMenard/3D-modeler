@@ -25,8 +25,9 @@
         android:theme="@style/Theme.CMTCast"
         tools:targetApi="31">
         
+        <!-- Disclaimer must be shown first -->
         <activity
-            android:name=".MainActivity"
+            android:name=".disclaimer.DisclaimerActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -34,6 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         
         <activity
             android:name=".camera.CameraActivity"
@@ -44,6 +50,22 @@
             android:name=".measurement.MeasurementActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".viewer.Model3DViewerActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        
+        <!-- FileProvider for sharing files -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
             
     </application>
 </manifest>

@@ -38,8 +38,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CMTCast" >
+
+        <!-- Disclaimer must be shown first -->
         <activity
-            android:name="com.medical.cmtcast.MainActivity"
+            android:name="com.medical.cmtcast.disclaimer.DisclaimerActivity"
             android:exported="true"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -49,6 +51,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.medical.cmtcast.MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.medical.cmtcast.camera.CameraActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -56,6 +62,21 @@
             android:name="com.medical.cmtcast.measurement.MeasurementActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.medical.cmtcast.viewer.Model3DViewerActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <!-- FileProvider for sharing files -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.medical.cmtcast.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <service
             android:name="androidx.camera.core.impl.MetadataHolderService"

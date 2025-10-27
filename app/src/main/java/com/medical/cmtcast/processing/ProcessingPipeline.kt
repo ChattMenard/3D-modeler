@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import com.medical.cmtcast.validation.QualityValidator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.opencv.android.OpenCVLoader
@@ -27,12 +28,21 @@ class ProcessingPipeline(private val context: Context) {
         }
     }
     
+    /**
+     * Callback interface for progress updates
+     */
+    interface ProgressCallback {
+        fun onProgress(progress: Int, message: String)
+        fun onStepComplete(step: String, details: String)
+    }
+    
     data class ProcessingResult(
         val stlFilePath: String,
         val pointCount: Int,
         val triangleCount: Int,
         val processingTimeMs: Long,
-        val measurements: Measurements
+        val measurements: Measurements,
+        val validationResult: QualityValidator.ValidationResult
     )
     
     data class Measurements(
@@ -40,6 +50,15 @@ class ProcessingPipeline(private val context: Context) {
         val circumferenceCalf: Double,
         val lengthTotal: Double
     )
+    
+    private var progressCallback: ProgressCallback? = null
+    
+    /**
+     * Set callback for progress updates
+     */
+    fun setProgressCallback(callback: ProgressCallback?) {
+        this.progressCallback = callback
+    }
     
     /**
      * Process videos and generate 3D cast model
@@ -55,22 +74,41 @@ class ProcessingPipeline(private val context: Context) {
             Log.d(TAG, logEntry)
         }
         
+        suspend fun updateProgress(progress: Int, message: String) {
+            log(message)
+            withContext(Dispatchers.Main) {
+                progressCallback?.onProgress(progress, message)
+            }
+        }
+        
+        suspend fun stepComplete(step: String, details: String) {
+            log("$step: $details")
+            withContext(Dispatchers.Main) {
+                progressCallback?.onStepComplete(step, details)
+            }
+        }
+        
         log("Starting 3D reconstruction pipeline with ${videoUris.size} videos")
+        updateProgress(0, "Initializing processing pipeline...")
         
         // Step 1: Extract frames from all videos
+        updateProgress(5, "Extracting frames from videos...")
         val videoProcessor = VideoProcessor(context)
         val allFrames = mutableListOf<VideoProcessor.ProcessedFrame>()
         
         for ((index, uri) in videoUris.withIndex()) {
+            val videoProgress = 5 + (index * 20 / videoUris.size)
+            updateProgress(videoProgress, "Processing video ${index + 1}/${videoUris.size}...")
             log("Processing video ${index + 1}/${videoUris.size}: $uri")
             val frames = videoProcessor.extractFrames(uri)
             allFrames.addAll(frames)
             log("Extracted ${frames.size} frames from video ${index + 1}")
         }
         
-        log("Total frames extracted: ${allFrames.size}")
+        stepComplete("Frame Extraction", "${allFrames.size} frames extracted from ${videoUris.size} videos")
         
         // Step 2: Detect ruler and calculate scale
+        updateProgress(30, "Detecting ruler and calculating scale...")
         val rulerDetector = RulerDetector()
         val frameMats = allFrames.map { it.mat }
         val rulerInfo = rulerDetector.detectRulerMultiFrame(frameMats)
@@ -82,46 +120,63 @@ class ProcessingPipeline(private val context: Context) {
         
         if (rulerInfo != null) {
             log("Ruler detected with confidence ${rulerInfo.confidence}, scale: $pixelToMm px/mm")
+            stepComplete("Ruler Detection", "Confidence: ${(rulerInfo.confidence * 100).toInt()}%, Scale: ${"%.3f".format(pixelToMm)} px/mm")
+        } else {
+            stepComplete("Ruler Detection", "Warning: Using default scale (ruler not detected)")
         }
         
         // Step 3: Build 3D point cloud
+        updateProgress(40, "Building 3D point cloud from frames...")
         log("Building 3D point cloud...")
         val reconstruction = Reconstruction3D()
         val pointCloud = reconstruction.buildPointCloud(frameMats, pixelToMm)
         log("Generated ${pointCloud.size} 3D points")
+        stepComplete("3D Reconstruction", "${pointCloud.size} points generated")
         
         // Step 4: Downsample for performance
+        updateProgress(55, "Optimizing point cloud...")
         log("Downsampling point cloud...")
         val downsampledCloud = reconstruction.downsamplePointCloud(pointCloud, voxelSize = 2.0)
         log("Downsampled to ${downsampledCloud.size} points")
+        stepComplete("Point Cloud Optimization", "Reduced to ${downsampledCloud.size} points")
         
         // Step 5: Generate mesh
+        updateProgress(70, "Generating 3D mesh...")
         log("Generating mesh...")
         val meshGenerator = MeshGenerator()
         val legMesh = meshGenerator.createMesh(downsampledCloud)
         log("Initial mesh: ${legMesh.triangles.size} triangles")
+        stepComplete("Mesh Generation", "${legMesh.triangles.size} triangles created")
         
         // Step 6: Apply cast thickness
+        updateProgress(80, "Applying cast thickness (3mm)...")
         log("Applying cast thickness (3mm)...")
         val castMesh = meshGenerator.applyThickness(legMesh, thickness = 3.0)
         log("Cast mesh: ${castMesh.triangles.size} triangles")
+        stepComplete("Cast Thickness Applied", "Final mesh: ${castMesh.triangles.size} triangles")
         
         // Step 7: Export to STL
+        updateProgress(90, "Exporting 3D model to STL format...")
         log("Exporting to STL format...")
         val stlContent = meshGenerator.exportToSTL(castMesh, "cmt_leg_cast")
         
         // Step 8: Save files
+        updateProgress(93, "Saving STL file...")
         val timestamp = System.currentTimeMillis()
         log("Saving files...")
         val stlFile = saveSTLFile(stlContent)
         log("STL file saved: ${stlFile.absolutePath} (${stlFile.length()} bytes)")
+        stepComplete("STL Export", "File: ${stlFile.name}, Size: ${stlFile.length() / 1024}KB")
         
         // Step 9: Calculate measurements
+        updateProgress(96, "Calculating measurements...")
         log("Calculating measurements...")
         val measurements = calculateMeasurements(downsampledCloud)
         log("Ankle: ${measurements.circumferenceAnkle}mm, Calf: ${measurements.circumferenceCalf}mm, Length: ${measurements.lengthTotal}mm")
+        stepComplete("Measurements", "Ankle: ${measurements.circumferenceAnkle.toInt()}mm, Calf: ${measurements.circumferenceCalf.toInt()}mm")
         
         // Step 10: Save measurement data
+        updateProgress(98, "Saving measurement data...")
         val measurementFile = saveMeasurementData(
             measurements,
             pointCloud.size,
@@ -133,6 +188,7 @@ class ProcessingPipeline(private val context: Context) {
         log("Measurement data saved: ${measurementFile.absolutePath}")
         
         // Step 11: Save processing log
+        updateProgress(99, "Saving processing logs...")
         val logFile = saveProcessingLog(
             videoCount = videoUris.size,
             frameCount = allFrames.size,
@@ -152,19 +208,38 @@ class ProcessingPipeline(private val context: Context) {
         frameMats.forEach { it.release() }
         
         val processingTime = System.currentTimeMillis() - startTime
+        updateProgress(100, "Validating quality and safety...")
+        
+        // Perform quality validation
+        val validator = QualityValidator()
+        val validationResult = validator.validateComplete(
+            rulerDetected = rulerInfo != null,
+            rulerConfidence = rulerInfo?.confidence,
+            frameCount = allFrames.size,
+            ankleCircumference = measurements.circumferenceAnkle,
+            calfCircumference = measurements.circumferenceCalf,
+            legLength = measurements.lengthTotal,
+            pointCount = downsampledCloud.size,
+            triangleCount = castMesh.triangles.size
+        )
+        
+        log("Validation complete: ${validationResult.level}")
+        stepComplete("Quality Validation", "${validationResult.level}: ${validationResult.messages.size} checks")
         
         Log.d(TAG, "Processing complete in ${processingTime}ms")
         Log.d(TAG, "Files saved:")
         Log.d(TAG, "  - STL: ${stlFile.absolutePath}")
         Log.d(TAG, "  - Measurements: ${measurementFile.absolutePath}")
         Log.d(TAG, "  - Log: ${logFile.absolutePath}")
+        Log.d(TAG, "Validation: ${validationResult.level}")
         
         return@withContext ProcessingResult(
             stlFilePath = stlFile.absolutePath,
             pointCount = downsampledCloud.size,
             triangleCount = castMesh.triangles.size,
             processingTimeMs = processingTime,
-            measurements = measurements
+            measurements = measurements,
+            validationResult = validationResult
         )
     }
     

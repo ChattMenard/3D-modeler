@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_blue"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚠️"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medical Device Disclaimer"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please read carefully before using this app"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:alpha="0.9"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <!-- Scrollable disclaimer text -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IMPORTANT SAFETY INFORMATION"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NOT FDA APPROVED"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/text_primary"
+                android:text="This application has NOT been approved, cleared, or authorized by the U.S. Food and Drug Administration (FDA) or any other regulatory authority. It is provided for RESEARCH and EDUCATIONAL purposes only."
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="INTENDED USE"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/text_primary"
+                android:text="This app is designed to assist in creating custom orthotic cast prototypes for patients with Charcot-Marie-Tooth (CMT) disease. The 3D models generated are prototypes that MUST be reviewed by qualified healthcare professionals before any medical use."
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WARNINGS AND LIMITATIONS"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/text_primary"
+                android:text="• DO NOT use this app as a substitute for professional medical advice\n\n• DO NOT use generated casts without consultation with a healthcare provider\n\n• Accuracy of measurements depends on proper technique and equipment\n\n• Computer vision algorithms may produce errors or inaccuracies\n\n• 3D printed devices may fail and cause injury if improperly designed or manufactured\n\n• Always have medical devices reviewed by qualified professionals\n\n• This app does not diagnose, treat, cure, or prevent any disease"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LIABILITY DISCLAIMER"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/text_primary"
+                android:text="The developers and distributors of this application assume NO LIABILITY for any injuries, damages, or adverse effects resulting from the use or misuse of this application or any devices created using this application. Users assume all risks and responsibilities."
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PROFESSIONAL CONSULTATION REQUIRED"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/text_primary"
+                android:text="Before using any cast or orthotic device generated by this app:\n\n• Consult with a licensed physician, orthopedist, or prosthetist\n\n• Have the 3D model professionally reviewed and modified if necessary\n\n• Ensure proper fit and safety before use\n\n• Follow all medical advice and recommendations"
+                android:layout_marginBottom="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/primary_blue"
+                android:alpha="0.3"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="BY USING THIS APP, YOU ACKNOWLEDGE AND ACCEPT ALL TERMS ABOVE"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Acknowledgment checkboxes -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@color/background_light"
+        android:elevation="8dp">
+
+        <CheckBox
+            android:id="@+id/checkboxNotFDA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I understand this app is NOT FDA approved"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary" />
+
+        <CheckBox
+            android:id="@+id/checkboxUnderstand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I understand the risks and limitations"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="8dp" />
+
+        <CheckBox
+            android:id="@+id/checkboxConsult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I will consult healthcare professionals before use"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="8dp" />
+
+        <!-- Action buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnDecline"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Decline"
+                android:textSize="16sp"
+                android:textColor="@android:color/holo_red_dark"
+                app:strokeColor="@android:color/holo_red_dark" />
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Accept &amp; Continue"
+                android:textSize="16sp"
+                android:backgroundTint="@color/primary_blue"
+                android:textColor="@android:color/white"
+                android:enabled="false" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

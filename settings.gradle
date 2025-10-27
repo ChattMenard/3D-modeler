@@ -1,2 +1,3 @@
 rootProject.name = "CMT Cast Designer"
 include ':app'
+include ':opencv-java'

@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.RectF
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,14 +16,26 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
+import androidx.camera.video.VideoRecordEvent
+import androidx.camera.video.MediaStoreOutputOptions
+import androidx.camera.video.PendingRecording
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.medical.cmtcast.R
+import com.medical.cmtcast.processing.RulerDetector
+import org.opencv.android.Utils
+import org.opencv.core.Mat
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -30,6 +44,7 @@ import java.util.concurrent.Executors
 class CameraActivity : AppCompatActivity() {
 
     private lateinit var previewView: PreviewView
+    private lateinit var rulerOverlay: RulerOverlayView
     private lateinit var tvStepIndicator: TextView
     private lateinit var tvInstructions: TextView
     private lateinit var progressCapture: ProgressBar
@@ -46,12 +61,14 @@ class CameraActivity : AppCompatActivity() {
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
     private var isRecording = false
+    private val rulerDetector = RulerDetector()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
         previewView = findViewById(R.id.viewFinder)
+        rulerOverlay = findViewById(R.id.rulerOverlay)
         tvStepIndicator = findViewById(R.id.tvStepIndicator)
         tvInstructions = findViewById(R.id.tvInstructions)
         progressCapture = findViewById(R.id.progressCapture)
@@ -200,18 +217,26 @@ class CameraActivity : AppCompatActivity() {
                     .build()
                 videoCapture = VideoCapture.withOutput(recorder)
                 
+                // Image analysis for real-time ruler detection
+                val imageAnalyzer = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+                    .also {
+                        it.setAnalyzer(cameraExecutor, RulerAnalyzer())
+                    }
+                
                 // Select back camera
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
                 
                 // Unbind all use cases before rebinding
                 cameraProvider.unbindAll()
                 
-                // Bind use cases to camera
+                // Bind use cases to camera (preview, video, analysis)
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, videoCapture
+                    this, cameraSelector, preview, videoCapture, imageAnalyzer
                 )
                 
-                Log.d("CameraActivity", "Camera started successfully with video recording")
+                Log.d("CameraActivity", "Camera started successfully with video recording and ruler detection")
             } catch (e: Exception) {
                 Log.e("CameraActivity", "Camera initialization failed", e)
                 Toast.makeText(this, "Camera initialization failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -240,5 +265,107 @@ class CameraActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+    
+    /**
+     * Analyzer for real-time ruler detection
+     */
+    private inner class RulerAnalyzer : ImageAnalysis.Analyzer {
+        
+        private var lastAnalysisTime = 0L
+        private val analysisInterval = 500L // Analyze every 500ms to avoid overhead
+        
+        override fun analyze(imageProxy: ImageProxy) {
+            val currentTime = System.currentTimeMillis()
+            
+            // Throttle analysis to avoid performance issues
+            if (currentTime - lastAnalysisTime < analysisInterval) {
+                imageProxy.close()
+                return
+            }
+            
+            lastAnalysisTime = currentTime
+            
+            try {
+                // Convert ImageProxy to Bitmap
+                val bitmap = imageProxyToBitmap(imageProxy)
+                
+                if (bitmap != null) {
+                    // Convert Bitmap to OpenCV Mat
+                    val mat = Mat()
+                    Utils.bitmapToMat(bitmap, mat)
+                    
+                    // Detect ruler
+                    val rulerInfo = rulerDetector.detectRuler(mat)
+                    
+                    // Update overlay on main thread
+                    runOnUiThread {
+                        if (rulerInfo != null) {
+                            // Scale detection rect from image to view coordinates
+                            val scaleX = previewView.width.toFloat() / mat.width().toFloat()
+                            val scaleY = previewView.height.toFloat() / mat.height().toFloat()
+                            
+                            val scaledRect = RectF(
+                                rulerInfo.rulerRect.x * scaleX,
+                                rulerInfo.rulerRect.y * scaleY,
+                                (rulerInfo.rulerRect.x + rulerInfo.rulerRect.width) * scaleX,
+                                (rulerInfo.rulerRect.y + rulerInfo.rulerRect.height) * scaleY
+                            )
+                            
+                            rulerOverlay.updateRulerDetection(scaledRect, rulerInfo.confidence)
+                        } else {
+                            rulerOverlay.clearDetection()
+                        }
+                    }
+                    
+                    mat.release()
+                    bitmap.recycle()
+                }
+            } catch (e: Exception) {
+                Log.e("RulerAnalyzer", "Analysis failed", e)
+            } finally {
+                imageProxy.close()
+            }
+        }
+        
+        private fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap? {
+            try {
+                val yBuffer = imageProxy.planes[0].buffer
+                val uBuffer = imageProxy.planes[1].buffer
+                val vBuffer = imageProxy.planes[2].buffer
+
+                val ySize = yBuffer.remaining()
+                val uSize = uBuffer.remaining()
+                val vSize = vBuffer.remaining()
+
+                val nv21 = ByteArray(ySize + uSize + vSize)
+
+                yBuffer.get(nv21, 0, ySize)
+                vBuffer.get(nv21, ySize, vSize)
+                uBuffer.get(nv21, ySize + vSize, uSize)
+
+                // Convert NV21 to Bitmap
+                val yuvImage = android.graphics.YuvImage(
+                    nv21,
+                    android.graphics.ImageFormat.NV21,
+                    imageProxy.width,
+                    imageProxy.height,
+                    null
+                )
+                
+                val out = java.io.ByteArrayOutputStream()
+                yuvImage.compressToJpeg(
+                    android.graphics.Rect(0, 0, imageProxy.width, imageProxy.height),
+                    100,
+                    out
+                )
+                
+                val imageBytes = out.toByteArray()
+                return android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            } catch (e: Exception) {
+                Log.e("RulerAnalyzer", "Bitmap conversion failed", e)
+                return null
+            }
+        }
     }
 }
