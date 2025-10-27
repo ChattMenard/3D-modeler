@@ -56,6 +56,12 @@
             android:exported="false"
             android:screenOrientation="landscape" />
         
+        <activity
+            android:name=".help.HelpActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+        
         <!-- FileProvider for sharing files -->
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -3276,6 +3276,7 @@ id stretch
 id submenuarrow
 id submit_area
 id supportScrollUp
+id tabLayout
 id tabMode
 id tag_accessibility_actions
 id tag_accessibility_clickable_spans
@@ -3338,6 +3339,7 @@ id up
 id useLogo
 id vertical_only
 id viewFinder
+id viewPager
 id view_offset_helper
 id view_transition
 id view_tree_lifecycle_owner
@@ -3463,6 +3465,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_camera
 layout activity_disclaimer
+layout activity_help
 layout activity_main
 layout activity_measurement
 layout activity_model3d_viewer
@@ -3482,6 +3485,11 @@ layout design_navigation_menu
 layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
+layout fragment_help_guide
+layout fragment_help_recording
+layout fragment_help_safety
+layout fragment_help_setup
+layout fragment_help_troubleshooting
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🎥 Video Recording Tips"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RECORDING PROCESS"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The app will guide you through 4 recording angles:\n\n1️⃣ FRONT VIEW\n   • Patient faces camera\n   • Capture full leg from hip to ankle\n   • Ruler visible on outside edge\n\n2️⃣ LEFT SIDE VIEW\n   • Rotate 90° counterclockwise\n   • Profile view of leg\n   • Ruler on back edge\n\n3️⃣ BACK VIEW\n   • Rotate another 90° (patient's back to camera)\n   • Full posterior view\n   • Ruler on opposite side from front\n\n4️⃣ RIGHT SIDE VIEW\n   • Rotate final 90°\n   • Opposite profile\n   • Complete 360° coverage"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CAMERA TECHNIQUES"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📱 Hold phone steady (use tripod if available)\n📱 Maintain consistent distance (2-3 feet)\n📱 Keep camera at mid-leg height\n📱 Frame entire leg + ruler in view\n📱 Avoid zooming during recording\n📱 Record 5-10 seconds per angle\n📱 Wait for green ruler detection box\n📱 Minimize camera movement"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PATIENT POSITIONING"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Stand upright with weight distributed naturally\n• Keep leg straight but not locked\n• Maintain same stance for all 4 angles\n• Avoid movement during recording\n• Relax muscles (natural position)\n• Position allows for CMT-specific foot drop if present"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REAL-TIME FEEDBACK"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Watch for on-screen indicators:\n\n🟢 GREEN BOX = Ruler detected (good!)\n   • Confidence > 50%\n   • Ready to record\n\n🔴 RED BOX = Weak detection\n   • Confidence 30-50%\n   • Adjust positioning\n\n❌ NO BOX = Ruler not detected\n   • Check lighting\n   • Reposition ruler\n   • Ensure ruler is visible"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="COMMON MISTAKES TO AVOID"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Moving too fast between angles\n❌ Blocking ruler with hands\n❌ Recording in poor lighting\n❌ Patient shifting position\n❌ Camera too close or too far\n❌ Ruler not visible in frame\n❌ Recording less than 5 seconds\n❌ Shaky/unstable camera movement"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary_blue"
+            android:alpha="0.3"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⏱️ Duration: 5-10 seconds per angle\n📹 Total: 20-40 seconds recording time\n🔄 Can retake any angle if needed"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>

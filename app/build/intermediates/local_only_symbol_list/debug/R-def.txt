@@ -48,6 +48,7 @@ id progressCapture
 id rulerOverlay
 id rvMeasurements
 id scrollView
+id tabLayout
 id tvAppDescription
 id tvAppTitle
 id tvInstructions
@@ -58,11 +59,18 @@ id tvProgressPercent
 id tvStepIndicator
 id tvStepLog
 id viewFinder
+id viewPager
 layout activity_camera
 layout activity_disclaimer
+layout activity_help
 layout activity_main
 layout activity_measurement
 layout activity_model3d_viewer
+layout fragment_help_guide
+layout fragment_help_recording
+layout fragment_help_safety
+layout fragment_help_setup
+layout fragment_help_troubleshooting
 mipmap ic_launcher
 mipmap ic_launcher_round
 string ankle_circumference

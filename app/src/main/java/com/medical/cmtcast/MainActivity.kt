@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.medical.cmtcast.camera.CameraActivity
 import com.medical.cmtcast.disclaimer.DisclaimerActivity
+import com.medical.cmtcast.help.HelpActivity
 import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
@@ -84,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
         
         btnViewInstructions.setOnClickListener {
-            showInstructions()
+            startActivity(Intent(this, HelpActivity::class.java))
         }
         
         btnMedicalDisclaimer.setOnClickListener {

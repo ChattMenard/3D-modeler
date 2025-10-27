@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📏 Ruler Setup Guide"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RULER REQUIREMENTS"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✅ Standard ruler with clear markings\n✅ At least 6 inches (15 cm) long\n✅ Flat, rigid surface (not flexible)\n✅ High contrast colors (visible marks)\n✅ Clean and undamaged\n\n❌ Avoid fabric tape measures\n❌ Avoid worn/faded rulers\n❌ Don't use rulers with missing marks"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="POSITIONING TIPS"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Place ruler VERTICALLY along the leg\n\n2. Keep ruler parallel to the leg's length\n\n3. Position ruler on the OUTSIDE of the leg (not touching directly)\n\n4. Maintain 1-2 inches distance from skin\n\n5. Ensure ruler is visible in ALL 4 camera angles\n\n6. Keep ruler stationary throughout recording\n\n7. Avoid shadows falling on ruler\n\n8. Don't obstruct ruler with hands/fingers"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LIGHTING SETUP"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 Use bright, even lighting\n💡 Avoid direct sunlight (creates harsh shadows)\n💡 Indoor lighting works best\n💡 Use multiple light sources if possible\n💡 Ensure ruler markings are clearly visible\n💡 Test camera preview before starting"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BACKGROUND CONSIDERATIONS"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Use plain, uncluttered background\n• Solid color preferred (not patterned)\n• Good contrast with leg and ruler\n• Remove unnecessary objects from frame\n• Ensure stable surface for patient"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary_blue"
+            android:alpha="0.3"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 TIP: The app shows real-time ruler detection with green/red box. Use this to verify proper positioning before recording!"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_secondary"
+            android:textStyle="italic"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>

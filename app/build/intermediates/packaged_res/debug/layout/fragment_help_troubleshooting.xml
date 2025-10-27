@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔧 Troubleshooting Guide"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Problem 1 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Ruler Not Detected"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solutions:\n• Improve lighting (add more light sources)\n• Use ruler with higher contrast markings\n• Move closer to camera (but keep full leg in frame)\n• Clean camera lens\n• Ensure ruler is flat and straight\n• Try different background color\n• Remove shadows from ruler\n• Check if ruler has clear, visible markings"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 2 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Low Confidence Detection (Red Box)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_orange_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solutions:\n• Adjust camera angle for better ruler view\n• Ensure ruler is perpendicular to camera\n• Reduce glare on ruler surface\n• Hold camera steady (use tripod)\n• Wait a moment for detection to stabilize\n• Reposition ruler slightly\n• Check ruler isn't partially obscured"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 3 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Validation Report Shows ERROR"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Possible causes:\n• Ruler detection confidence too low\n• Not enough video frames captured\n• Measurements outside normal ranges\n• Insufficient 3D reconstruction points\n\nSolutions:\n• Retake videos with better ruler positioning\n• Record longer (10+ seconds per angle)\n• Ensure good lighting throughout\n• Keep patient and ruler stationary\n• Check ruler is same in all 4 angles\n• Verify patient positioning is consistent"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 4 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ App Crashes During Processing"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solutions:\n• Close other apps to free memory\n• Restart the app\n• Clear app cache (Settings > Apps > CMT Cast > Clear Cache)\n• Ensure sufficient storage space\n• Update to latest app version\n• Restart device if problem persists"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 5 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ 3D Model Looks Incorrect"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_orange_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Common issues:\n• Distorted shape: Patient moved during recording\n• Holes/gaps: Insufficient camera coverage\n• Wrong size: Ruler detection error\n• Asymmetric: Inconsistent angles\n\nSolutions:\n• Retake videos keeping patient perfectly still\n• Ensure all 4 angles captured completely\n• Verify ruler visible and detected in all angles\n• Maintain consistent camera distance\n• Check validation report before accepting"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 6 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Camera Won't Start"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solutions:\n• Grant camera permissions (Settings > Apps > CMT Cast > Permissions)\n• Grant audio permissions for video recording\n• Close other apps using camera\n• Restart app\n• Check device camera works in other apps\n• Restart device"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 7 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Processing Takes Too Long"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_orange_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Expected time: 30-90 seconds\n\nIf longer:\n• Device may be older/slower\n• Background apps consuming resources\n• Large video files (long recordings)\n\nSolutions:\n• Wait patiently (don't close app)\n• Close background apps\n• Record shorter videos (5-10 sec each)\n• Ensure device isn't in power saving mode"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Problem 8 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❌ Can't Share STL File"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_orange_dark"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solutions:\n• Grant storage permissions\n• Check if file was generated successfully\n• Ensure target app supports STL files\n• Try 'Share All Files' to include JSON/LOG\n• Copy files manually from device storage\n• Use file manager to locate in Documents/CMTCast/"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary_blue"
+            android:alpha="0.3"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 GENERAL TIPS"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Practice makes perfect - try several times\n• Better to retake than use poor quality results\n• Review validation report carefully\n• When in doubt, ask for help\n• Document issues for healthcare provider\n• Check app updates regularly"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Still having issues? Consult with your healthcare provider or prosthetist for assistance."
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_secondary"
+            android:textStyle="italic"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📖 How to Use CMT Cast App"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome to the CMT Cast measurement and design app. Follow these steps to create a custom 3D-printed orthotic cast."
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Step 1 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STEP 1: Prepare Your Equipment"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Standard ruler (6-12 inches / 15-30 cm)\n• Good lighting (avoid shadows)\n• Clean, uncluttered background\n• Stable surface or helper to hold camera\n• Patient's leg prepared (clean, dry skin)"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Step 2 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STEP 2: Position the Ruler"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Place ruler vertically along the leg\n• Keep ruler flat and straight\n• Position visible in all 4 video angles\n• Don't cover ruler with fingers\n• Ensure good contrast with background"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Step 3 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STEP 3: Record 4 Video Angles"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The app will guide you through recording from:\n\n1️⃣ Front view\n2️⃣ Left side view\n3️⃣ Back view\n4️⃣ Right side view\n\nHold each position steady for 5-10 seconds."
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Step 4 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STEP 4: Review Results"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Check measurement accuracy\n• Review quality validation report\n• View 3D model preview\n• Share STL file for 3D printing\n• ALWAYS consult healthcare professional"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary_blue"
+            android:alpha="0.3"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⏱️ Total Time: 2-5 minutes\n📏 Accuracy: ±2-5mm\n🔄 Can retake anytime"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>
