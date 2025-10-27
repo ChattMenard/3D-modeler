@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.medical.cmtcast.R
 import com.medical.cmtcast.processing.RulerDetector
+import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 import java.text.SimpleDateFormat
@@ -62,10 +63,32 @@ class CameraActivity : AppCompatActivity() {
     private var recording: Recording? = null
     private var isRecording = false
     private val rulerDetector = RulerDetector()
+    
+    companion object {
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+        
+        init {
+            try {
+                // Load C++ shared library first (required by OpenCV)
+                System.loadLibrary("c++_shared")
+                // Then load OpenCV native library
+                System.loadLibrary("opencv_java4")
+                Log.d("CameraActivity", "OpenCV libraries loaded successfully")
+            } catch (e: UnsatisfiedLinkError) {
+                Log.e("CameraActivity", "Failed to load native libraries", e)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
+
+        Log.d("CameraActivity", "OpenCV library loaded successfully")
 
         previewView = findViewById(R.id.viewFinder)
         rulerOverlay = findViewById(R.id.rulerOverlay)
@@ -81,7 +104,33 @@ class CameraActivity : AppCompatActivity() {
         
         setupUI()
         updateStepIndicator()
-        startCamera()
+        
+        // Check permissions before starting camera
+        if (allPermissionsGranted()) {
+            startCamera()
+        } else {
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+            )
+        }
+    }
+    
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+    
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
+                startCamera()
+            } else {
+                Toast.makeText(this, "Camera and audio permissions are required", Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
     }
 
     private fun setupUI() {
@@ -255,6 +304,9 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun proceedToMeasurement() {
+        // Show loading message
+        Toast.makeText(this, "Preparing analysis... This may take a moment", Toast.LENGTH_LONG).show()
+        
         // Pass video URIs to measurement activity
         val intent = Intent(this, com.medical.cmtcast.measurement.MeasurementActivity::class.java)
         intent.putStringArrayListExtra("video_uris", ArrayList(capturedVideos))

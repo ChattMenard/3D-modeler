@@ -108,6 +108,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPermissionStatus" />
 
     <LinearLayout
+        android:id="@+id/layoutButtons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -121,9 +122,21 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="3dp"
             android:layout_weight="1"
-            android:text="Instructions"
+            android:text="Help"
+            android:textColor="@color/primary_blue"
+            app:strokeColor="@color/primary_blue" />
+        
+        <Button
+            android:id="@+id/btnSettings"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1"
+            android:text="Settings"
             android:textColor="@color/primary_blue"
             app:strokeColor="@color/primary_blue" />
 
@@ -132,17 +145,30 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
             android:layout_weight="1"
             android:text="Disclaimer"
             android:textColor="@color/accent_orange"
             app:strokeColor="@color/accent_orange" />
+        
+        <Button
+            android:id="@+id/btnAbout"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="3dp"
+            android:layout_weight="1"
+            android:text="About"
+            android:textColor="@color/primary_blue"
+            app:strokeColor="@color/primary_blue" />
 
     </LinearLayout>
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/medical_warning"
         android:textAlignment="center"
@@ -151,6 +177,7 @@
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutButtons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

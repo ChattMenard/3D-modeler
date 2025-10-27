@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.medical.cmtcast.camera.CameraActivity
 import com.medical.cmtcast.disclaimer.DisclaimerActivity
 import com.medical.cmtcast.help.HelpActivity
+import com.medical.cmtcast.settings.SettingsActivity
 import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +21,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnStartMeasurement: Button
     private lateinit var tvPermissionStatus: TextView
     private lateinit var btnViewInstructions: Button
+    private lateinit var btnSettings: Button
     private lateinit var btnMedicalDisclaimer: Button
+    private lateinit var btnAbout: Button
     
     companion object {
         private const val CAMERA_PERMISSION_REQUEST = 100
@@ -52,7 +55,9 @@ class MainActivity : AppCompatActivity() {
         btnStartMeasurement = findViewById(R.id.btnStartMeasurement)
         tvPermissionStatus = findViewById(R.id.tvPermissionStatus)
         btnViewInstructions = findViewById(R.id.btnViewInstructions)
+        btnSettings = findViewById(R.id.btnSettings)
         btnMedicalDisclaimer = findViewById(R.id.btnMedicalDisclaimer)
+        btnAbout = findViewById(R.id.btnAbout)
         
         setupUI()
         
@@ -88,8 +93,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, HelpActivity::class.java))
         }
         
+        btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        
         btnMedicalDisclaimer.setOnClickListener {
             showMedicalDisclaimer()
+        }
+        
+        btnAbout.setOnClickListener {
+            startActivity(Intent(this, AboutActivity::class.java))
         }
     }
     

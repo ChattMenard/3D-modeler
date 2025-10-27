@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Cast Settings -->
+    <PreferenceCategory
+        app:title="Cast Design"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="cast_thickness"
+            app:title="Cast Thickness"
+            app:summary="Thickness of the 3D printed cast wall (mm)"
+            app:defaultValue="3.0"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="cast_thickness_preset"
+            app:title="Thickness Preset"
+            app:entries="@array/thickness_presets"
+            app:entryValues="@array/thickness_preset_values"
+            app:defaultValue="3.0"
+            app:summary="Quick presets for common thicknesses"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <!-- Ruler Settings -->
+    <PreferenceCategory
+        app:title="Ruler Calibration"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="ruler_length"
+            app:title="Ruler Length"
+            app:summary="Physical length of your ruler"
+            app:defaultValue="30.0"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="ruler_unit"
+            app:title="Ruler Unit"
+            app:entries="@array/ruler_units"
+            app:entryValues="@array/ruler_unit_values"
+            app:defaultValue="cm"
+            app:summary="Unit of measurement for ruler"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="ruler_length_preset"
+            app:title="Common Ruler Sizes"
+            app:entries="@array/ruler_presets"
+            app:entryValues="@array/ruler_preset_values"
+            app:summary="Standard ruler lengths"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <!-- Processing Settings -->
+    <PreferenceCategory
+        app:title="Processing"
+        app:iconSpaceReserved="false">
+
+        <SeekBarPreference
+            app:key="frame_rate"
+            app:title="Frame Extraction Rate"
+            app:summary="Frames per second to extract from video"
+            app:defaultValue="10"
+            android:max="20"
+            app:min="5"
+            app:showSeekBarValue="true"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="mesh_detail"
+            app:title="Mesh Detail Level"
+            app:entries="@array/mesh_detail_levels"
+            app:entryValues="@array/mesh_detail_values"
+            app:defaultValue="medium"
+            app:summary="Higher detail = larger files, longer processing"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="enable_smoothing"
+            app:title="Enable Mesh Smoothing"
+            app:summary="Apply smoothing algorithm to 3D mesh"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <!-- Display Settings -->
+    <PreferenceCategory
+        app:title="Display"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            app:key="measurement_unit"
+            app:title="Measurement Unit"
+            app:entries="@array/measurement_units"
+            app:entryValues="@array/measurement_unit_values"
+            app:defaultValue="mm"
+            app:summary="Unit for displaying measurements"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="show_validation_details"
+            app:title="Show Detailed Validation"
+            app:summary="Display full validation report with all checks"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <!-- Advanced Settings -->
+    <PreferenceCategory
+        app:title="Advanced"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="save_intermediate_files"
+            app:title="Save Intermediate Files"
+            app:summary="Keep frame images and processing logs"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="enable_debug_mode"
+            app:title="Debug Mode"
+            app:summary="Show additional processing information"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import com.medical.cmtcast.settings.AppSettings
 import com.medical.cmtcast.validation.QualityValidator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -143,17 +144,31 @@ class ProcessingPipeline(private val context: Context) {
         // Step 5: Generate mesh
         updateProgress(70, "Generating 3D mesh...")
         log("Generating mesh...")
-        val meshGenerator = MeshGenerator()
+        val meshGenerator = MeshGenerator(context)  // Pass context for settings
         val legMesh = meshGenerator.createMesh(downsampledCloud)
         log("Initial mesh: ${legMesh.triangles.size} triangles")
         stepComplete("Mesh Generation", "${legMesh.triangles.size} triangles created")
         
-        // Step 6: Apply cast thickness
-        updateProgress(80, "Applying cast thickness (3mm)...")
-        log("Applying cast thickness (3mm)...")
-        val castMesh = meshGenerator.applyThickness(legMesh, thickness = 3.0)
+        // Step 5.5: Apply smoothing if enabled
+        val smoothedMesh = if (AppSettings.isSmoothingEnabled(context)) {
+            updateProgress(75, "Smoothing mesh surface...")
+            log("Applying mesh smoothing...")
+            val smoothed = meshGenerator.smoothMesh(legMesh, iterations = 3)
+            log("Mesh smoothing completed")
+            stepComplete("Mesh Smoothing", "3 smoothing iterations applied")
+            smoothed
+        } else {
+            log("Mesh smoothing disabled")
+            legMesh
+        }
+        
+        // Step 6: Apply cast thickness from settings
+        val thickness = AppSettings.getCastThickness(context)
+        updateProgress(80, "Applying cast thickness (${thickness}mm)...")
+        log("Applying cast thickness (${thickness}mm)...")
+        val castMesh = meshGenerator.applyThickness(smoothedMesh)  // Uses settings internally
         log("Cast mesh: ${castMesh.triangles.size} triangles")
-        stepComplete("Cast Thickness Applied", "Final mesh: ${castMesh.triangles.size} triangles")
+        stepComplete("Cast Thickness Applied", "Final mesh: ${castMesh.triangles.size} triangles (${thickness}mm thick)")
         
         // Step 7: Export to STL
         updateProgress(90, "Exporting 3D model to STL format...")

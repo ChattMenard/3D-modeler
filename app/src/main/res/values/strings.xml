@@ -46,4 +46,69 @@
     <!-- Success Messages -->
     <string name="success_measurement_complete">Measurements extracted successfully</string>
     <string name="success_cast_design_ready">Ready to generate 3D cast design</string>
+    
+    <!-- Settings Arrays -->
+    <string-array name="thickness_presets">
+        <item>Light Support (2mm)</item>
+        <item>Standard (3mm)</item>
+        <item>Heavy Duty (4mm)</item>
+        <item>Maximum Support (5mm)</item>
+    </string-array>
+    
+    <string-array name="thickness_preset_values">
+        <item>2.0</item>
+        <item>3.0</item>
+        <item>4.0</item>
+        <item>5.0</item>
+    </string-array>
+    
+    <string-array name="ruler_units">
+        <item>Centimeters (cm)</item>
+        <item>Inches (in)</item>
+    </string-array>
+    
+    <string-array name="ruler_unit_values">
+        <item>cm</item>
+        <item>in</item>
+    </string-array>
+    
+    <string-array name="ruler_presets">
+        <item>6 inches (15cm)</item>
+        <item>12 inches (30cm)</item>
+        <item>18 inches (45cm)</item>
+        <item>24 inches (60cm)</item>
+        <item>Custom</item>
+    </string-array>
+    
+    <string-array name="ruler_preset_values">
+        <item>15.0</item>
+        <item>30.0</item>
+        <item>45.0</item>
+        <item>60.0</item>
+        <item>custom</item>
+    </string-array>
+    
+    <string-array name="mesh_detail_levels">
+        <item>Low (Fast, Smaller Files)</item>
+        <item>Medium (Balanced)</item>
+        <item>High (Detailed, Larger Files)</item>
+    </string-array>
+    
+    <string-array name="mesh_detail_values">
+        <item>low</item>
+        <item>medium</item>
+        <item>high</item>
+    </string-array>
+    
+    <string-array name="measurement_units">
+        <item>Millimeters (mm)</item>
+        <item>Centimeters (cm)</item>
+        <item>Inches (in)</item>
+    </string-array>
+    
+    <string-array name="measurement_unit_values">
+        <item>mm</item>
+        <item>cm</item>
+        <item>in</item>
+    </string-array>
 </resources>

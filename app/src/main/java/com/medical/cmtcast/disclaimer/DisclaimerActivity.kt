@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.medical.cmtcast.MainActivity
 import com.medical.cmtcast.R
 
@@ -42,6 +43,9 @@ class DisclaimerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Install splash screen before super.onCreate
+        installSplashScreen()
+        
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_disclaimer)
 

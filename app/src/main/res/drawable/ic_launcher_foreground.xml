@@ -1,9 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24.0"
-    android:viewportHeight="24.0">
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Leg/cast silhouette centered -->
     <path
-        android:fillColor="#FF000000"
-        android:pathData="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2ZM21,9V7L15,5.5V7.5L21,9ZM3,9L9,7.5V5.5L3,7V9ZM15,9.5V19C15,20.1 14.1,21 13,21H11C9.9,21 9,20.1 9,19V9.5L3,8V22H5V10L10.5,8.5V19H13.5V8.5L19,10V22H21V8L15,9.5Z"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,30 L48,30 L45,42 L43,54 L42,66 L41,78 L41,88 L48,88 L48,78 L49,66 L51,54 L52,42 L54,30 Z"/>
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,30 L60,30 L63,42 L65,54 L66,66 L67,78 L67,88 L60,88 L60,78 L59,66 L57,54 L56,42 L54,30 Z"/>
+    
+    <!-- Cast wrapping lines -->
+    <path
+        android:strokeColor="#FF9800"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M42,48 L66,48"/>
+    
+    <path
+        android:strokeColor="#FF9800"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M41,60 L67,60"/>
+    
+    <path
+        android:strokeColor="#FF9800"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M41,72 L67,72"/>
+    
+    <path
+        android:strokeColor="#FF9800"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M41,84 L67,84"/>
+    
+    <!-- 3D cube symbol in corner -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M75,35 L82,31 L89,35 L89,44 L82,48 L75,44 Z"/>
+    
+    <path
+        android:fillColor="#FFC107"
+        android:pathData="M82,31 L89,35 L82,39 L75,35 Z"/>
+    
+    <path
+        android:fillColor="#F57C00"
+        android:pathData="M75,35 L75,44 L82,48 L82,39 Z"/>
+    
 </vector>

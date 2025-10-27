@@ -1,12 +1,14 @@
 package com.medical.cmtcast.processing
 
+import android.content.Context
 import android.util.Log
+import com.medical.cmtcast.settings.AppSettings
 import kotlin.math.*
 
 /**
  * Generates 3D mesh from point cloud and exports to STL
  */
-class MeshGenerator {
+class MeshGenerator(private val context: Context) {
     
     companion object {
         private const val TAG = "MeshGenerator"
@@ -170,9 +172,86 @@ class MeshGenerator {
     }
     
     /**
+     * Apply Laplacian smoothing to mesh for better surface quality
+     * Smooths the mesh by averaging each vertex with its neighbors
+     */
+    fun smoothMesh(mesh: Mesh, iterations: Int = 3): Mesh {
+        Log.d(TAG, "Applying Laplacian smoothing ($iterations iterations)")
+        
+        var currentMesh = mesh
+        
+        repeat(iterations) { iteration ->
+            // Build vertex adjacency map (which vertices are connected)
+            val vertexNeighbors = mutableMapOf<Reconstruction3D.Point3D, MutableList<Reconstruction3D.Point3D>>()
+            
+            currentMesh.triangles.forEach { triangle ->
+                // Each vertex in a triangle is a neighbor to the other two
+                addNeighbor(vertexNeighbors, triangle.v1, triangle.v2)
+                addNeighbor(vertexNeighbors, triangle.v1, triangle.v3)
+                addNeighbor(vertexNeighbors, triangle.v2, triangle.v1)
+                addNeighbor(vertexNeighbors, triangle.v2, triangle.v3)
+                addNeighbor(vertexNeighbors, triangle.v3, triangle.v1)
+                addNeighbor(vertexNeighbors, triangle.v3, triangle.v2)
+            }
+            
+            // Create a map of original vertex -> smoothed vertex
+            val smoothedVertices = mutableMapOf<Reconstruction3D.Point3D, Reconstruction3D.Point3D>()
+            
+            vertexNeighbors.forEach { (vertex, neighbors) ->
+                if (neighbors.isNotEmpty()) {
+                    // Calculate average position of neighbors
+                    val avgX = neighbors.map { it.x }.average()
+                    val avgY = neighbors.map { it.y }.average()
+                    val avgZ = neighbors.map { it.z }.average()
+                    
+                    // Blend between original and average (0.5 = 50% smoothing)
+                    val smoothFactor = 0.5
+                    smoothedVertices[vertex] = Reconstruction3D.Point3D(
+                        vertex.x * (1 - smoothFactor) + avgX * smoothFactor,
+                        vertex.y * (1 - smoothFactor) + avgY * smoothFactor,
+                        vertex.z * (1 - smoothFactor) + avgZ * smoothFactor
+                    )
+                } else {
+                    smoothedVertices[vertex] = vertex
+                }
+            }
+            
+            // Apply smoothed positions to all triangles
+            val smoothedTriangles = currentMesh.triangles.map { triangle ->
+                Triangle(
+                    smoothedVertices[triangle.v1] ?: triangle.v1,
+                    smoothedVertices[triangle.v2] ?: triangle.v2,
+                    smoothedVertices[triangle.v3] ?: triangle.v3
+                )
+            }
+            
+            currentMesh = Mesh(smoothedTriangles, currentMesh.bounds)
+            Log.d(TAG, "Completed smoothing iteration ${iteration + 1}/$iterations")
+        }
+        
+        return currentMesh
+    }
+    
+    /**
+     * Helper to add neighbor relationship (avoiding duplicates)
+     */
+    private fun addNeighbor(
+        map: MutableMap<Reconstruction3D.Point3D, MutableList<Reconstruction3D.Point3D>>,
+        vertex: Reconstruction3D.Point3D,
+        neighbor: Reconstruction3D.Point3D
+    ) {
+        val neighbors = map.getOrPut(vertex) { mutableListOf() }
+        if (!neighbors.contains(neighbor)) {
+            neighbors.add(neighbor)
+        }
+    }
+    
+    /**
      * Apply offset to mesh for cast thickness
      */
-    fun applyThickness(mesh: Mesh, thickness: Double = 3.0): Mesh {
+    fun applyThickness(mesh: Mesh): Mesh {
+        val thickness = AppSettings.getCastThickness(context).toDouble()  // Get from settings
+        Log.d(TAG, "Applying thickness: ${thickness}mm")
         val thickenedTriangles = mesh.triangles.map { triangle ->
             val normal = triangle.normal()
             

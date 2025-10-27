@@ -3,10 +3,17 @@ package com.medical.cmtcast.viewer
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.medical.cmtcast.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 class Model3DViewerActivity : AppCompatActivity() {
@@ -14,6 +21,7 @@ class Model3DViewerActivity : AppCompatActivity() {
     private lateinit var glSurfaceView: GLSurfaceView
     private lateinit var renderer: STLRenderer
     private lateinit var tvInstructions: TextView
+    private lateinit var loadingOverlay: LinearLayout
     
     private var previousX = 0f
     private var previousY = 0f
@@ -24,6 +32,7 @@ class Model3DViewerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_model3d_viewer)
 
         tvInstructions = findViewById(R.id.tvInstructions)
+        loadingOverlay = findViewById(R.id.loadingOverlay)
         
         // Get STL file path from intent
         val stlPath = intent.getStringExtra("stl_path")
@@ -48,7 +57,14 @@ class Model3DViewerActivity : AppCompatActivity() {
             true
         }
         
-        Toast.makeText(this, "3D Model Loaded", Toast.LENGTH_SHORT).show()
+        // Hide loading overlay after a short delay to allow rendering to start
+        lifecycleScope.launch {
+            delay(1500) // Give OpenGL time to load and render first frame
+            withContext(Dispatchers.Main) {
+                loadingOverlay.visibility = View.GONE
+                Toast.makeText(this@Model3DViewerActivity, "3D Model Loaded", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun handleTouch(event: MotionEvent): Boolean {

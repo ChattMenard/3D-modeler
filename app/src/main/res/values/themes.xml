@@ -15,4 +15,11 @@
     </style>
 
     <style name="Theme.CMTCast" parent="Base.Theme.CMTCast" />
+    
+    <!-- Splash Screen Theme -->
+    <style name="Theme.CMTCast.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_app_icon</item>
+        <item name="postSplashScreenTheme">@style/Theme.CMTCast</item>
+    </style>
 </resources>
